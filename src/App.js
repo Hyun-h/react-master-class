@@ -2,7 +2,11 @@
 import styled, { keyframes } from "styled-components";
 
 const Wrapper = styled.section`
+  height: 100vh;
+  width: 100vw;
   display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const rotateAnimaiton = keyframes`
@@ -25,18 +29,21 @@ const Box = styled.div`
   align-items: center;
   animation: ${rotateAnimaiton} 1s linear infinite;
 
-  //컴포넌트 안에서 원하는 element의 스타일을 주는 것도 가능
-  span {
-    font-size: 36px;
+  ${Emoji}:hover {
+    font-size: 100px;
+  }
+`;
 
-    //nesting 처리 가능
-    &:hover {
-      font-size: 60px;
-    }
+//컴포넌트를 따로 빼서 의존도를 낮추면 tag가 어떤 것이든 신경쓰는 게 줄어듦
+const Emoji = styled.span`
+  font-size: 36px;
 
-    &:active {
-      opacity: 0;
-    }
+  &:hover {
+    font-size: 60px;
+  }
+
+  &:active {
+    opacity: 0;
   }
 `;
 
@@ -44,8 +51,11 @@ function App() {
   return (
     <Wrapper>
       <Box>
-        <span>😱</span>
+        {/* 컴포넌트 안에서 selector 된 Emoji */}
+        <Emoji>😱</Emoji>
       </Box>
+      {/* 원래 Emoji */}
+      <Emoji>🤤</Emoji>
     </Wrapper>
   );
 }
