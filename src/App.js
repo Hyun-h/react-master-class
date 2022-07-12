@@ -1,40 +1,52 @@
-import styled from "styled-components";
+//Animaiton 사용방법
+import styled, { keyframes } from "styled-components";
 
-const Father = styled.section`
+const Wrapper = styled.section`
   display: flex;
 `;
 
-//만약 모든 style을 활용하고 싶은데 html 태그만 바꾸고 싶을 경우
-const Btn = styled.button`
-  color: white;
-  background-color: tomato;
-  border: 0;
-  border-radius: 15px;
-  padding: 0 10px;
+const rotateAnimaiton = keyframes`
+  from {
+    transform: rotate(0deg);
+    border-radius: 0px;
+  }
+  to {
+    transform: rotate(360deg);
+    border-radius: 50%;
+  }
 `;
 
-//반복되는 속성이 있을 때는 attrs를 사용해서 전달될 모든 속성을 가진 오브젝트를 담을 수 있음
-const Input = styled.input.attrs({ required: true, minLength: 10 })``;
+const Box = styled.div`
+  height: 200px;
+  width: 200px;
+  background-color: tomato;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ${rotateAnimaiton} 1s linear infinite;
+
+  //컴포넌트 안에서 원하는 element의 스타일을 주는 것도 가능
+  span {
+    font-size: 36px;
+
+    //nesting 처리 가능
+    &:hover {
+      font-size: 60px;
+    }
+
+    &:active {
+      opacity: 0;
+    }
+  }
+`;
 
 function App() {
   return (
-    <Father>
-      {/* as를 써서 html 태그 바꾸기 예시는 button tag에서 a tag로 변경 */}
-      <Btn as="a">Log In</Btn>
-      <Btn>Log In</Btn>
-
-      {/* attrs를 쓰면 이렇게 속성을 반복하지 않아도 된다.
-      <Input required />
-      <Input required />
-      <Input required />
-      <Input required /> 
-      */}
-
-      <Input />
-      <Input />
-      <Input />
-      <Input />
-    </Father>
+    <Wrapper>
+      <Box>
+        <span>😱</span>
+      </Box>
+    </Wrapper>
   );
 }
 
