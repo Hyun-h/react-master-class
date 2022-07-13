@@ -9,3 +9,5 @@
 5. div 투성이인 jsx에서 해방될 수 있다.
 6. JS 쓰는 방법만 알면 JS 쓰듯 쓰는 게 가능.
 7. styled-components 사용방법은 리엑트와 찰떡궁합.
+
+## 프로젝트에서 styled-components를 어떻게 적용시킬 것인가?
