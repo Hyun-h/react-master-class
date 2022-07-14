@@ -14,7 +14,7 @@ function App() {
     };
     return (
         <div>
-            <form>
+            <form onSubmit={onSubmit}>
                 <input value={value} onChange={onChange} type='text' placeholder='usename' />
                 <button>Log in</button>
             </form>
