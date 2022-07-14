@@ -16,7 +16,7 @@ function App() {
         <div>
             <form onSubmit={onSubmit}>
                 <input value={value} onChange={onChange} type='text' placeholder='usename' />
-                <button>Log in</button>
+                <button>test</button>
             </form>
         </div>
     );
