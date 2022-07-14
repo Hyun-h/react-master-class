@@ -19,7 +19,7 @@ function App() {
     `;
 
     const H1 = styled.h1`
-        font-color: ${(props) => props.theme.textColor};
+        color: ${(props) => props.theme.textColor};
     `;
 
     const Button = styled.button`
