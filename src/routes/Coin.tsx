@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router';
 import styled from 'styled-components';
 
@@ -36,6 +36,61 @@ interface RouterState {
     name: string;
 }
 
+interface InfoData {
+    id: string;
+    name: string;
+    symbol: string;
+    rank: number;
+    is_new: boolean;
+    is_active: boolean;
+    type: string;
+    description: string;
+    message: string;
+    open_source: boolean;
+    started_at: string;
+    development_status: string;
+    hardware_wallet: boolean;
+    proof_type: string;
+    org_structure: string;
+    hash_algorithm: string;
+    first_data_at: string;
+    last_data_at: string;
+}
+
+interface PriceData {
+    id: string;
+    name: string;
+    symbol: string;
+    rank: number;
+    circulating_supply: number;
+    total_supply: number;
+    max_supply: number;
+    beta_value: number;
+    first_data_at: string;
+    last_updated: string;
+    quotes: {
+        USD: {
+            ath_date: string;
+            ath_price: number;
+            market_cap: number;
+            market_cap_change_24h: number;
+            percent_change_1h: number;
+            percent_change_1y: number;
+            percent_change_6h: number;
+            percent_change_7d: number;
+            percent_change_12h: number;
+            percent_change_15m: number;
+            percent_change_24h: number;
+            percent_change_30d: number;
+            percent_change_30m: number;
+            percent_from_price_ath: number;
+            price: number;
+            volume_24h: number;
+            volume_24h_change_24h: number;
+        };
+    };
+}
+
 function Coin() {
     const [loading, setLoading] = useState(true);
     //TS : 그래서 const 어쩌구가 뭔데? 나 : <RouteParams> 이거야!
@@ -43,6 +98,19 @@ function Coin() {
     //coins component에서 Link to로 전달된 object를 받아옴
     //코인의 name을 이미 가지고 있어서 API가 줄 때까지 기다릴 필요가 없어짐
     const { state } = useLocation<RouterState>();
+    //ts는 info와 priceInfo를 빈 배열로 인식해서 설명해 줄 필요가 있음
+    const [info, setInfo] = useState<InfoData>();
+    const [priceInfo, setPriceInfo] = useState<PriceData>();
+
+    useEffect(() => {
+        (async () => {
+            //캡슐화
+            const infoData = await (await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)).json();
+            const priceData = await (await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)).json();
+            setInfo(infoData);
+            setPriceInfo(priceData);
+        })();
+    }, []);
 
     return (
         <Container>

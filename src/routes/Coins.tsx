@@ -73,6 +73,7 @@ function Coins() {
     useEffect(() => {
         //즉시실행함수 : 한 번의 실행만 필요로 할 때 적합
         (async () => {
+            //Coin component와 다르게 여기는 변수가 각각 필요해서 분리. 캡슐화 안됨
             const response = await fetch('https://api.coinpaprika.com/v1/coins');
             const json = await response.json();
             setCoins(json.slice(0, 100));
