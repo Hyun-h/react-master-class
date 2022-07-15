@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router';
+import { Switch, Route, Link, useParams, useLocation, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
+
+import Chart from './Chart';
+import Price from './Price';
 
 const Container = styled.main`
     padding: 0 1.25rem;
@@ -24,6 +27,50 @@ const Loader = styled.span`
     display: inline-block;
     width: 100%;
     text-align: center;
+`;
+
+const Overview = styled.div`
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 0.625rem 1.25rem;
+    border-radius: 10px;
+`;
+const OverviewItem = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    span:first-child {
+        font-size: 0.625rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+`;
+const Description = styled.p`
+    margin: 1.25rem 0;
+`;
+
+const Tabs = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 25px 0px;
+    gap: 10px;
+`;
+
+const Tab = styled.span<{ isActive: boolean }>`
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 400;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 7px 0px;
+    border-radius: 10px;
+    //styled-components 안에서 조건도 체크 가능하다!
+    color: ${(props) => (props.isActive ? props.theme.accentColor : props.theme.textColor)};
+    a {
+        display: block;
+    }
 `;
 
 //이제부터 들여야 하는 습관 : TS는 늘 설명을 해줘야 한다.
@@ -94,6 +141,7 @@ interface PriceData {
 function Coin() {
     const [loading, setLoading] = useState(true);
     //TS : 그래서 const 어쩌구가 뭔데? 나 : <RouteParams> 이거야!
+    //useParams : URL에서 변수의 정보를 가져다 줌
     const { coinId } = useParams<RouteParams>();
     //coins component에서 Link to로 전달된 object를 받아옴
     //코인의 name을 이미 가지고 있어서 API가 줄 때까지 기다릴 필요가 없어짐
@@ -102,6 +150,10 @@ function Coin() {
     const [info, setInfo] = useState<InfoData>();
     const [priceInfo, setPriceInfo] = useState<PriceData>();
 
+    //useRouteMatch 로 해당 루트와 일치하면 object를 내보냄
+    const priceMatch = useRouteMatch('/:coinId/price');
+    const chartMatch = useRouteMatch('/:coinId/chart');
+
     useEffect(() => {
         (async () => {
             //캡슐화
@@ -109,16 +161,68 @@ function Coin() {
             const priceData = await (await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)).json();
             setInfo(infoData);
             setPriceInfo(priceData);
+            setLoading(false);
         })();
-    }, []);
+        //hook의 최적의 성능을 위해서는 dependency(의존성)를 []안에 넣어줘야 함.
+    }, [coinId]);
 
     return (
         <Container>
             <Header>
-                {/* object로 state를 받아왔을 때 바로 상세링크로 가면 당연히 로드된 게 없으므로 undefined 처리가 됨. 그래서 아래와 같은 트릭을 사용 */}
-                <Title>{state?.name || 'Loading...'}</Title>
+                <Title>{state?.name ? state.name : loading ? 'Loading...' : info?.name}</Title>
             </Header>
-            {loading ? <Loader>Loading...</Loader> : null}
+            {loading ? (
+                <Loader>Loading...</Loader>
+            ) : (
+                <>
+                    <Overview>
+                        <OverviewItem>
+                            <span>Rank:</span>
+                            <span>{info?.rank}</span>
+                        </OverviewItem>
+                        <OverviewItem>
+                            <span>Symbol:</span>
+                            <span>${info?.symbol}</span>
+                        </OverviewItem>
+                        <OverviewItem>
+                            <span>Open Source:</span>
+                            <span>{info?.open_source ? 'Yes' : 'No'}</span>
+                        </OverviewItem>
+                    </Overview>
+                    <Description>{info?.description}</Description>
+                    <Overview>
+                        <OverviewItem>
+                            <span>Total Suply:</span>
+                            <span>{priceInfo?.total_supply}</span>
+                        </OverviewItem>
+                        <OverviewItem>
+                            <span>Max Supply:</span>
+                            <span>{priceInfo?.max_supply}</span>
+                        </OverviewItem>
+                    </Overview>
+
+                    <Tabs>
+                        {/* 여기서 조건검사*/}
+                        <Tab isActive={chartMatch !== null}>
+                            <Link to={`/${coinId}/chart`}>Chart</Link>
+                        </Tab>
+                        <Tab isActive={priceMatch !== null}>
+                            <Link to={`/${coinId}/price`}>Price</Link>
+                        </Tab>
+                    </Tabs>
+
+                    {/* Nested Rountes를 쓰려면 최상단 루트에 꼭 path가 지정되어 있어야 함 */}
+                    {/* Switch 설정을 해주고 Link 설정을 해줘야 함 */}
+                    <Switch>
+                        <Route path={`/:coinId/price`}>
+                            <Price />
+                        </Route>
+                        <Route path={`/:coinId/chart`}>
+                            <Chart />
+                        </Route>
+                    </Switch>
+                </>
+            )}
         </Container>
     );
 }
