@@ -54,14 +54,14 @@ const Description = styled.p`
 const Tabs = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    margin: 25px 0px;
-    gap: 10px;
+    margin: 1.25rem 0;
+    gap: 0.625rem;
 `;
 
 const Tab = styled.span<{ isActive: boolean }>`
     text-align: center;
     text-transform: uppercase;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 400;
     background-color: rgba(0, 0, 0, 0.5);
     padding: 7px 0px;
@@ -150,7 +150,7 @@ function Coin() {
     const [info, setInfo] = useState<InfoData>();
     const [priceInfo, setPriceInfo] = useState<PriceData>();
 
-    //useRouteMatch 로 해당 루트와 일치하면 object를 내보냄
+    //useRouteMatch : 특정한 URL에 있는지 여부를 알려줌. 해당 루트와 일치하면 object를 내보냄
     const priceMatch = useRouteMatch('/:coinId/price');
     const chartMatch = useRouteMatch('/:coinId/chart');
 
