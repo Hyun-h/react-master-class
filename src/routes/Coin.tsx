@@ -40,6 +40,8 @@ const OverviewItem = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 33%;
+
     span:first-child {
         font-size: 0.625rem;
         font-weight: 400;
@@ -69,6 +71,7 @@ const Tab = styled.span<{ isActive: boolean }>`
     //styled-components 안에서 조건도 체크 가능하다!
     color: ${(props) => (props.isActive ? props.theme.accentColor : props.theme.textColor)};
     a {
+        padding: 7px 0px;
         display: block;
     }
 `;
