@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { fetchCoins } from '../api';
@@ -85,6 +86,13 @@ function Coins() {
     const { isLoading, data } = useQuery<ICoin[]>('allCoins', fetchCoins);
     return (
         <Container>
+            <Helmet>
+                {/* 
+                    head로 바로 가는 타이틀.
+                    head 안에 들어가는 것들 넣어서 사용가능.
+                */}
+                <title>코인</title>
+            </Helmet>
             <Header>
                 <Title>코인</Title>
             </Header>
