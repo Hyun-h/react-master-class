@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Switch, Route, Link, useParams, useLocation, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Chart from './Chart';
 import Price from './Price';
+import { useQuery } from 'react-query';
+import { fetchCoinInfo, fetchCoinTickers } from '../api';
 
 const Container = styled.main`
     padding: 0 1.25rem;
@@ -86,7 +88,7 @@ interface RouterState {
     name: string;
 }
 
-interface InfoData {
+interface IInfo {
     id: string;
     name: string;
     symbol: string;
@@ -107,7 +109,7 @@ interface InfoData {
     last_data_at: string;
 }
 
-interface PriceData {
+interface ITicker {
     id: string;
     name: string;
     symbol: string;
@@ -142,37 +144,44 @@ interface PriceData {
 }
 
 function Coin() {
-    const [loading, setLoading] = useState(true);
     //TS : 그래서 const 어쩌구가 뭔데? 나 : <RouteParams> 이거야!
     //useParams : URL에서 변수의 정보를 가져다 줌
     const { coinId } = useParams<RouteParams>();
     //coins component에서 Link to로 전달된 object를 받아옴
     //코인의 name을 이미 가지고 있어서 API가 줄 때까지 기다릴 필요가 없어짐
     const { state } = useLocation<RouterState>();
-    //ts는 info와 priceInfo를 빈 배열로 인식해서 설명해 줄 필요가 있음
-    const [info, setInfo] = useState<InfoData>();
-    const [priceInfo, setPriceInfo] = useState<PriceData>();
-
     //useRouteMatch : 특정한 URL에 있는지 여부를 알려줌. 해당 루트와 일치하면 object를 내보냄
     const priceMatch = useRouteMatch('/:coinId/price');
     const chartMatch = useRouteMatch('/:coinId/chart');
 
-    useEffect(() => {
-        (async () => {
-            //캡슐화
-            const infoData = await (await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)).json();
-            const priceData = await (await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)).json();
-            setInfo(infoData);
-            setPriceInfo(priceData);
-            setLoading(false);
-        })();
-        //hook의 최적의 성능을 위해서는 dependency(의존성)를 []안에 넣어줘야 함.
-    }, [coinId]);
+    // const [loading, setLoading] = useState(true);
+    // const [info, setInfo] = useState<InfoData>();
+    // const [priceInfo, setPriceInfo] = useState<PriceData>();
+
+    // useEffect(() => {
+    //     (async () => {
+    //         //캡슐화
+    //         const infoData = await (await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)).json();
+    //         const priceData = await (await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)).json();
+    //         setInfo(infoData);
+    //         setPriceInfo(priceData);
+    //         setLoading(false);
+    //     })();
+    //     //hook의 최적의 성능을 위해서는 dependency(의존성)를 []안에 넣어줘야 함.
+    // }, [coinId]);
+
+    //fecher function에 argument 넣기 () => fetchCoinInfo(coinId)
+    //queryId는 고유의 이름값이 있어야 함. ['info', coinId] === ["카테고리 역할", 고유한 부분]
+    //마찬가지로 useQuery Hook을 쓸 때 중복되면 안됨. 그래서 이와 같이 지정해줘야 함. { isLoading: infoLoading, data: infoData }
+    const { isLoading: infoLoading, data: infoData } = useQuery<IInfo>(['info', coinId], () => fetchCoinInfo(coinId));
+    const { isLoading: tickerLoading, data: tickerData } = useQuery<ITicker>(['ticker', coinId], () => fetchCoinTickers(coinId));
+
+    const loading = infoLoading || tickerLoading;
 
     return (
         <Container>
             <Header>
-                <Title>{state?.name ? state.name : loading ? 'Loading...' : info?.name}</Title>
+                <Title>{state?.name ? state.name : loading ? 'Loading...' : infoData?.name}</Title>
             </Header>
             {loading ? (
                 <Loader>Loading...</Loader>
@@ -181,26 +190,26 @@ function Coin() {
                     <Overview>
                         <OverviewItem>
                             <span>Rank:</span>
-                            <span>{info?.rank}</span>
+                            <span>{infoData?.rank}</span>
                         </OverviewItem>
                         <OverviewItem>
                             <span>Symbol:</span>
-                            <span>${info?.symbol}</span>
+                            <span>${infoData?.symbol}</span>
                         </OverviewItem>
                         <OverviewItem>
                             <span>Open Source:</span>
-                            <span>{info?.open_source ? 'Yes' : 'No'}</span>
+                            <span>{infoData?.open_source ? 'Yes' : 'No'}</span>
                         </OverviewItem>
                     </Overview>
-                    <Description>{info?.description}</Description>
+                    <Description>{infoData?.description}</Description>
                     <Overview>
                         <OverviewItem>
                             <span>Total Suply:</span>
-                            <span>{priceInfo?.total_supply}</span>
+                            <span>{tickerData?.total_supply}</span>
                         </OverviewItem>
                         <OverviewItem>
                             <span>Max Supply:</span>
-                            <span>{priceInfo?.max_supply}</span>
+                            <span>{tickerData?.max_supply}</span>
                         </OverviewItem>
                     </Overview>
 
