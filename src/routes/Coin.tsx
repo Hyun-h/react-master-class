@@ -227,10 +227,11 @@ function Coin() {
                     {/* Switch 설정을 해주고 Link 설정을 해줘야 함 */}
                     <Switch>
                         <Route path={`/:coinId/price`}>
-                            <Price />
+                            {/* props로 coinId 전달 */}
+                            <Price coinId={coinId} />
                         </Route>
                         <Route path={`/:coinId/chart`}>
-                            <Chart />
+                            <Chart coinId={coinId} />
                         </Route>
                     </Switch>
                 </>
