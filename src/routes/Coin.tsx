@@ -172,7 +172,7 @@ function Coin() {
 
     //fecher function에 argument 넣기 () => fetchCoinInfo(coinId)
     //queryId는 고유의 이름값이 있어야 함. ['info', coinId] === ["카테고리 역할", 고유한 부분]
-    //마찬가지로 useQuery Hook을 쓸 때 중복되면 안됨. 그래서 이와 같이 지정해줘야 함. { isLoading: infoLoading, data: infoData }
+    //마찬가지로 useQuery Hook을 쓸 때 중복되면 안됨. 그래서 이와 같이 지정해줘야 함. 자바스크립트 문법 { isLoading: infoLoading, data: infoData }
     const { isLoading: infoLoading, data: infoData } = useQuery<IInfo>(['info', coinId], () => fetchCoinInfo(coinId));
     const { isLoading: tickerLoading, data: tickerData } = useQuery<ITicker>(['ticker', coinId], () => fetchCoinTickers(coinId));
 
