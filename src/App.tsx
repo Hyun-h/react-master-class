@@ -74,6 +74,7 @@ a {
 `;
 
 function App() {
+    //여기서 문제! 강의 예시처럼 props 전달이 아닌 context api 는 어떻게 적용할까요?
     const [isDart, setIsDark] = useState(false);
     const toggleDark = () => setIsDark((current) => !current);
 

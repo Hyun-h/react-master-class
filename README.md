@@ -75,7 +75,7 @@
 
 -   기존에 사용하던 redux : 구관이 명관. 좋은 툴들이 나왔다고 하지만 압도적인 redux의 방대한 자료, 다운로드 수는 어려움에 부딪혔을 때 자료를 많이 찾을 수 있다는 소리다. 이 점은 유지보수나 수정 할 때도 유리하다는 소리다. 게다가 redux 기술자들도 내가 느낀 불편함을 개선점으로 잡았나보다. 문법의 복잡함을 개선한 redux toolkit을 훑어보니 굳이 기존의 방법을 버려야 하나? 라는 의문점이 들었다.
 
--   액션이 그렇게 많지 않은 클라이언트 상태이면 굳이 전역상태관리 툴을 도입할 필요가 있을까? 전역관리가 복잡하게 들어가지 않는다면 필요한 순간이 올 때 context를 쓰는 게 낫지 않을까?
+-   액션이 그렇게 많지 않은 클라이언트 상태이면 굳이 전역상태관리 툴을 도입할 필요가 있을까? 전역관리가 복잡하게 들어가지 않는다면 필요한 순간이 올 때 context를 쓰는 게 낫지 않을까? : 공식문서에서 재렌더링 여부를 정할 때 reference 확인을 하기 때문에 provider의 부모가 렌더링 될 때마다 불필요하게 하위 컴포넌트가 다시 렌더링 되는 문제를 주의하라고 한다.
 
 ## 참고 사이트
 
@@ -83,3 +83,4 @@
 -   react-query 참고자료1 : https://tech.kakao.com/2022/06/13/react-query/
 -   react-query 참고자료2 : https://www.youtube.com/watch?v=MArE6Hy371c
 -   상태관리 트랜드 참고 : https://npmtrends.com/jotai-vs-react-redux-vs-recoil-vs-zustand
+-   context 공식문서 : https://ko.reactjs.org/docs/context.html#when-to-use-context
