@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Router from './Router';
-import { createGlobalStyle } from 'styled-components';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { darkTheme, lightTheme } from './theme';
 
 const GlobalStyle = createGlobalStyle`
 //reset css 넣든 넣어주면 됨
@@ -73,11 +74,18 @@ a {
 `;
 
 function App() {
+    const [isDart, setIsDark] = useState(false);
+    const toggleDark = () => setIsDark((current) => !current);
+
     return (
         <>
-            <GlobalStyle />
-            <Router />
-            <ReactQueryDevtools initialIsOpen={true} />
+            {/* //index.tsx에서 App,tsx로 이동 */}
+            <ThemeProvider theme={isDart ? darkTheme : lightTheme}>
+                <button onClick={toggleDark}>Toggle Mode</button>
+                <GlobalStyle />
+                <Router />
+                <ReactQueryDevtools initialIsOpen={true} />
+            </ThemeProvider>
         </>
     );
 }

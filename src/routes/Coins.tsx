@@ -22,8 +22,8 @@ const Header = styled.header`
 const CoinsList = styled.ul``;
 
 const Coin = styled.li`
-    background-color: white;
-    color: ${(props) => props.theme.bgColor};
+    background-color: ${(props) => props.theme.boxBgColor};
+    color: ${(props) => props.theme.textColor};
     margin-bottom: 0.625rem;
     border-radius: 15px;
     padding: 1.25rem;
@@ -90,7 +90,7 @@ function Coins() {
                 {/* 
                     head로 바로 가는 타이틀.
                     head 안에 들어가는 것들 넣어서 사용가능.
-                */}
+                    */}
                 <title>코인</title>
             </Helmet>
             <Header>

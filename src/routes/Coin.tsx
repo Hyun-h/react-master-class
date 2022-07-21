@@ -35,7 +35,7 @@ const Loader = styled.span`
 const Overview = styled.div`
     display: flex;
     justify-content: space-between;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: ${(props) => props.theme.boxBgColor};
     padding: 0.625rem 1.25rem;
     border-radius: 10px;
 `;
@@ -54,6 +54,7 @@ const OverviewItem = styled.div`
 `;
 const Description = styled.p`
     margin: 1.25rem 0;
+    color: ${(props) => props.theme.boxBgColor};
 `;
 
 const Tabs = styled.div`
@@ -68,7 +69,7 @@ const Tab = styled.span<{ isActive: boolean }>`
     text-transform: uppercase;
     font-size: 0.75rem;
     font-weight: 400;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: ${(props) => props.theme.boxBgColor};
     padding: 7px 0px;
     border-radius: 10px;
     //styled-components 안에서 조건도 체크 가능하다!
