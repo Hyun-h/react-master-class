@@ -4,6 +4,8 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { fetchCoins } from '../api';
+import { useSetRecoilState } from 'recoil';
+import { isDarkAtom } from '../atoms';
 
 const Container = styled.main`
     padding: 0 1.25rem;
@@ -84,6 +86,11 @@ function Coins() {
     //isLoading은 boolean 속성. const [loading, setLoading] = useState(true); 대체.
     //fetchCoins function이 끝나면 그 함수의 데이터를 data에 넣음. const [coins, setCoins] = useState<ICoin[]>([]); 대체.
     const { isLoading, data } = useQuery<ICoin[]>('allCoins', fetchCoins);
+    //이벤트 관련된 건 use"Set"RecoilState : 매개변수로 atom을 받고 atom을 변경하는 함수를 반환
+    const setDartAtom = useSetRecoilState(isDarkAtom);
+    //previous(이전) value를 가져와서 반대를 return
+    const toggleDarkAtom = () => setDartAtom((prev) => !prev);
+
     return (
         <Container>
             <Helmet>
@@ -95,6 +102,7 @@ function Coins() {
             </Helmet>
             <Header>
                 <Title>코인</Title>
+                <button onClick={toggleDarkAtom}>Toggle Mode</button>
             </Header>
             {isLoading ? (
                 <Loader>Loading...</Loader>

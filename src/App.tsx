@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Router from './Router';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { darkTheme, lightTheme } from './theme';
+import { useRecoilValue } from 'recoil';
+import { isDarkAtom } from './atoms';
 
 const GlobalStyle = createGlobalStyle`
 //reset css 넣든 넣어주면 됨
@@ -74,15 +76,12 @@ a {
 `;
 
 function App() {
-    //여기서 문제! 강의 예시처럼 props 전달이 아닌 context api 는 어떻게 적용할까요?
-    const [isDart, setIsDark] = useState(false);
-    const toggleDark = () => setIsDark((current) => !current);
+    //커스텀 훅을 쓰듯 쓸 부분에 선언해주면 된다
+    const isDart = useRecoilValue(isDarkAtom);
 
     return (
         <>
-            {/* //index.tsx에서 App,tsx로 이동 */}
             <ThemeProvider theme={isDart ? darkTheme : lightTheme}>
-                <button onClick={toggleDark}>Toggle Mode</button>
                 <GlobalStyle />
                 <Router />
                 <ReactQueryDevtools initialIsOpen={true} />
